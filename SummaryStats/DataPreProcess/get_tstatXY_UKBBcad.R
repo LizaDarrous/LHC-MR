@@ -24,7 +24,7 @@ fY_sub=fY[fY$rsid %in% comm,]
 fX1=fX_sub[order(fX_sub$oldID),] 
 fY1=fY_sub[order(fY_sub$rsid),] 
 
-## Add info to GLGC file to match those of UKBB
+## Add info to CAD file to match those of UKBB
 #Get tsat (standerdised effects) and average sample size to be used as Ny
 fX1$tstat=fX1$Effect/fX1$StdErr
 fX1$n_complete_samples=380831 #Effective sample size calculated from (4*N_controls*N_cases)/N_control+N_cases
