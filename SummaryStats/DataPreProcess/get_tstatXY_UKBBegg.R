@@ -24,12 +24,14 @@ fY_sub=fY[fY$rsid %in% comm,]
 fX1=fX_sub[order(fX_sub$RSID),] 
 fY1=fY_sub[order(fY_sub$rsid),] 
 
-## Add info to GLGC file to match those of UKBB
+## Add info to EGG file to match those of UKBB
 #Get tsat (standerdised effects) and average sample size to be used as Ny
 fX1$tstat=fX1$beta/fX1$se
 fX1$n_complete_samples=mean(fX1$n_ownBW)
 fX1$A1=toupper(fX1$ea)
 fX1$A2=toupper(fX1$nea)
+fX1$rsid=fX1$RSID #In analysis file, rsid is needed to match SNPs to LD file
+
 
 #Check alignment between alleles
 aligned = which(fY1$ref==fX1$A2 &
