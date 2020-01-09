@@ -27,9 +27,10 @@ fY1=fY_sub[order(fY_sub$rsid),]
 ## Add info to GLGC and Cardio files to match those of UKBB
 #Get tsat (standerdised effects) and average sample size to be used as Ny
 fX1$tstat=fX1$Effect/fX1$StdErr
-fX1$n_complete_samples=380831 # effective sample size calculated from (4*N_controls*N_cases)/N_control+N_cases
+fX1$n_complete_samples=380831 #Effective sample size calculated from (4*N_controls*N_cases)/N_control+N_cases
 fX1$A1=toupper(fX1$Allele1)
 fX1$A2=toupper(fX1$Allele2)
+fX1$rsid=fX1$oldID #In analysis file, rsid is needed to match SNPs to LD file
 
 fY1$tstat=fY1$beta/tY1$se
 fY1$n_complete_samples=mean(fY1$N)
