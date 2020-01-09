@@ -26,16 +26,18 @@ Xfile2=Xfile1[Xfile1$rsid %in% LDrs,]
 dups=which(duplicated(Xfile2$rsid)==TRUE) #Some duplication arrises due to joining with VARinfo file that has multiple entery for the same SNP
 dups_index = NA
 
-## remove all SNP duplicates by checking which of each set is closest to the MAF in the LD file
+## Remove all SNP duplicates by checking which of each set is closest to the MAF in the LD file
 for(i in dups){
   tab=Xfile2[Xfile2$rsid==Xfile2$rsid[i],]
   ld_maf=LDfile[which(LDfile$rs==Xfile2$rsid[i]),4]
   dups_index=c(dups_index,as.numeric(setdiff(rownames(tab),rownames(tab[Closest(tab$minor_AF,as.numeric(ld_maf), which = TRUE),]))))
 }
 
-## FIlter out unwanted duplicate SNP rows
+## Filter out unwanted duplicate SNP rows
 Xfile3=Xfile2[!rownames(Xfile2) %in% dups_index, ]
 # Confirm unique SNPs
 length(which(duplicated(Xfile3$rsid)==TRUE))
 ## Write trait file to be used on LHC-MR analysis
 fwrite(Xfile3, "BMI_uniq.tsv", sep="\t")
+
+
