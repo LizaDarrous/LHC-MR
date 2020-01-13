@@ -11,10 +11,9 @@ LHC-MR extends the standard Mendelian Randomisation model to incorporate the pre
 ## Usage
 
 The source code for LHC-MR was written in R version 3.6.0. No othr language is used in computation, and thus only bash and R are needed. 
-Several R-packages are needed to run the analysis, which they will be detailed below.
-```
+Several R-packages are needed to run the analysis, which will be detailed below.
 
-```
+
 ### Simulations
 #### Prerequisites
 R Packages needed to run the simualtions include:
@@ -22,11 +21,10 @@ R Packages needed to run the simualtions include:
 install.packages(ggplot2);  library(ggplot2)
 install.packages(NMOF); library(NMOF)
 install.packages(mvtnorm);  library(mvtnorm)
-install.packages(stats);  library(stats)
 install.packages(TwoSampleMR);  library(TwoSampleMR)
 
 install.packages(reshape2); library(reshape2)
-install.packages(dplyr);  library(dplyr
+install.packages(dplyr);  library(dplyr)
 install.packages(stringr);  library(stringr)
 install.packages(ggpubr); library(ggpubr)
 install.packages(extrafont);  library(extrafont)
@@ -56,22 +54,24 @@ The result file will have the follwoing columns (mLL - pX - pU - pY - h2X - h2Y 
 #### Prerequisites
 R Packages needed to run the summary stat analysis include:
 ``` 
-library(data.table);
-library(dplyr);
-library(DescTools);
-library(rslurm);
-library(tidyverse);
-library(stringr);
-library(extRemes);
+install.packages(data.table);  library(data.table)
+install.packages(data.table);  library(data.table)
+install.packages(DescTools); library(DescTools)
+install.packages(rslurm);  library(rslurm)
+install.packages(tidyverse); library(tidyverse)
+install.packages(stringr); library(stringr)
+install.packages(extRemes);  library(extRemes)
  
-library(GGally);
-library(mixtools);
-
+install.packages(GGally);  library(GGally)
+install.packages(mixtools);  library(mixtools)
 ```
+A very important package used in the analysis is [rslurm](https://cran.r-project.org/web/packages/rslurm/rslurm.pdf), which allows us to submit array jobs from within R without having to create a bash script to do so. Moreover, this parallelisation step takes advantage of the presence of a cluster with several partitions, onto which it can simultaneoulsy distribute and run array jobs. Once rslurm is installed, it's important to edit the template files that come with the package to reflect the info of the cluster being used.
 
+! To be filled out !
 
 #### Results
 
+! To be filled out !
 
 ## Citation
 
