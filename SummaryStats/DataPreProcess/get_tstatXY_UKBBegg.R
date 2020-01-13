@@ -13,8 +13,7 @@ fX = fread(fileX)
 fY = fread(fileY)
 
 #VARinfo = fread(cmd = " zcat < ~/data/variants.tsv.bgz", sep="\t", header=TRUE)
-#fX = inner_join(fX, VARinfo[,c(4:6)])  #Joining, by = "rsid" , 4:6 = ref, alt, rsid
-#fY = inner_join(fY, VARinfo[,c(4:6)])  #Joining, by = "rsid" , 4:6 = ref, alt, rsid - done in get_tstatXY_UKBB.R
+#fY = inner_join(fY, VARinfo[,c(1,4,5)])  #Joining, by = "variant" , 1,4,6 = variant, ref, alt - done in get_tstatXY_UKBB.R, if not then uncomment
 
 #Get overlapping SNPS between the two traits
 comm=intersect(fY$rsid,fX$RSID)
