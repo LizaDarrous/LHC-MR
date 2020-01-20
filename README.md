@@ -10,7 +10,7 @@ LHC-MR extends the standard Mendelian Randomisation model to incorporate the pre
 
 ## Usage
 
-The source code for LHC-MR was written in R version 3.6.0. No other language is used in computation, and thus only bash and R are needed. 
+The source code for LHC-MR was written in R version 3.6.0. No other language is used in the computation, and thus only bash and R are needed. 
 Several R-packages are needed to run the analysis, which will be detailed below.
 
 
@@ -67,11 +67,71 @@ install.packages(mixtools);  library(mixtools)
 ```
 A very important package used in the analysis is [rslurm](https://cran.r-project.org/web/packages/rslurm/rslurm.pdf), which allows us to submit array jobs from within R without having to create a bash script to do so. Moreover, this parallelisation step takes advantage of the presence of a cluster with several partitions, onto which it can simultaneously distribute and run array jobs. Once rslurm is installed, it's important to edit the template files that come with the package to reflect the info of the cluster being used.
 
-! To be filled out !
+The LHC-MR association summary statistics analysis for multiple traits was written with a certain folder hierarchy assummed, such as the following:
+```
+~ --|---- data
+    |       |---- Scripts (optim.R and variations)
+    |       |--- LDscores.txt
+    |       |--- Unprocessed summary stat files
+    |
+    |---- DataPreprocess
+    |       |--- get_tstatXY_[GWAS].R scripts
+    |
+    |---- pair1 (trait1-trait2)
+    |---- pair2 (trait1-trait3)
+    |---- pair3 (trait2-trait3)
+    |---- so on...
+```
+Raw summary stat files downloaded in `data` require certain columns to continue with analysis: rsid, EffectAllele/A1/alt, OtherAllele/A2/ref, number of samples (effective sample size), beta/effect size of effective allele
+se/standard error of effect size.
 
+These files ought to be processed using the `get_tstatXY_[GWAS].R` scripts in order to calculate the t-statistics (beta/se) of the SNPs, which will be used in the main LHC-MR analysis.
+
+The script `get_tstatXY_UKBB.R` is slightly different than the rest. It first selects the set of SNPs for which imputation quality info>0.99 and MAF>0.005 using the `LDscore.txt` file. Then for these set of SNPs, it uses the `variants.tsv.bgz` obtained from Neale's [UKBB GWAS Imputed v3](https://docs.google.com/spreadsheets/d/1kvPoupSzsSFBNSztMzl04xMoSC3Kcx3CrjVf4yBmESU/edit?ts=5b5f17db#gid=178908679) to merge variant information to variant details of the summary statistics files. This leads to the addition of the A1 and A2 columns as well as the rsid, all of which are needed for further analysis. Some duplication occurs when `variants.tsv.bgz` is merged with UKBB summary stat files, which is handled in the scripts.
+This script is used once per UKBB trait, allowing all the traits to then have the same set of overlapping SNPs when running trait pair analysis between UKBB. 
+
+The other scripts in this folder contain the processing procedure for trait pairs that are not both UKBB. In this case, an overlapping set of SNPs ought to be found for each trait pair to be analysed, and this is where the folder structure presented above comes in handy. Each trait pair's summary stat data is read from the original data folder, then a set of overlapping SNPs is found, columns are renamed to include A1, A2 and rsid. T-stat and effective sample size is calculated for the non-UKBB trait, and the strands of the two traits are harmonised. 
+This smaller set of overlapping and harmonised SNPs is written into the pair folder (trait1-trait2) to be used in the LHC-MR analysis. 
+
+For the LHC-MR analysis, the script `LHC_Automated.R` first reads in the summary stat files for the exposure (X) and outcome (Y). It then obtains LD scores and weights for the set of overlapping SNPs, calculates the standardised effects of the SNPs and runs the complete model in a new directory called `Comp` in order to estimate the 12 unknown parameters:-
+- iX, iY: population structure.
+- pX, pU, pY: proportion of SNPs with an effect on X, confounder U, and Y.
+- h2X, h2Y: direct heritabilities of X and Y.
+- tX, tY: confounder effect of X and Y.
+- a, b: causal effect of X->Y and Y->X.
+- rho: phenotypic correlation due to sample overlap.
+
+Once the complete model is ran, nested models are subsequently run, each time removing one parameter from the following {a,b,tX,tY,U(tX,tY,pU)} and running the analysis in created directories named after the removed parameter. The parent model (in this case the complete model) is then tested using LRT against each of the nested models. If the estimated parameters of the nested model explained the fit better than the parent model, then that nested model becomes the parent model and the remaining parameters are each nested in turn and tested against the new parent model using LRT. This is repeated until a model that is better than all its nested models is found or all 5 parameters are exhausted.
+
+The folder hierarchy within a pair-trait folder is as follows:
+```
+---- pair1 (trait1-trait2)
+      |--- Nesting.txt (reveals the nesting levels) 
+      |--- trait1_uniq.tsv
+      |--- trait2_uniq.tsv
+      |---- Comp
+             |--- Pair_LRT.csv (results of the LRT between the parent/complete model and all the nested models)
+             |--- AllRes_Parscale.csv (results of the parameter estimations from the 100 random starting points)
+             |---- b
+             |---- U
+             |---- tX
+             |---- tY
+             |---- a
+                   |--- Pair_LRT.csv (results of the LRT between the parent model and all the new nested models)
+                   |--- AllRes_Parscale.csv (results of the parameter estimations from the 100 random starting points)
+                   |--- Pairs.pdf (plots from MakeFigures.R found in /data/Scripts)
+                   |--- Hist.pdf (plots from MakeFigures.R found in /data/Scripts)
+                   |---- b
+                   |---- U
+                   |---- tX
+                   |---- tY
+```
 #### Results
+The results of the LRT performed between each parent model and its nested models is found in the directory of the parent model under the name `Pair_LRT.csv`. In that file, the p-value of the LRT between the parent model and the nested model that removes a single parameter is reported and is used as a measure for the significance of that parameter.
 
-! To be filled out !
+The results of the optimisation run in rslurm with 100 different starting points is found in `AllRes_parscale.csv`. These parameter estimates are used as future starting points for nested models. Furthermore, the smallest negative likelihood (largest likelihood) is reported back for that (nested) model as well as its estimated parameters.
+
+Finally, when a final model is reached, the loop of nesting ends, and the script `MakeFigures.R` is run on the final `AllRes_parscale.csv` to obtain histogram plots for all the remaining estimated parameters as well as pairwise plots between them that can reveal the presence of patterns (i.e. bimodal causal effect).
 
 ## Citation
 
