@@ -29,7 +29,7 @@ dups_index = NA
 ## Remove all SNP duplicates by checking which of each set is closest to the MAF in the LD file
 for(i in dups){
   tab=Xfile2[Xfile2$rsid==Xfile2$rsid[i],]
-  ld_maf=LDfile[which(LDfile$rs==Xfile2$rsid[i]),4]
+  ld_maf=LDfile[which(LDfile$rs==Xfile2$rsid[i]),5] #UKBB_AF
   dups_index=c(dups_index,as.numeric(setdiff(rownames(tab),rownames(tab[Closest(tab$minor_AF,as.numeric(ld_maf), which = TRUE),]))))
 }
 
