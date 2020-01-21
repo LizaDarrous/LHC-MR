@@ -166,10 +166,16 @@ while(length(parameters)>0 & Nesting_boolean){
     }else{ #Generate script name from previoulsy removed/nested parameters and current parameter to nest
       script = paste0("_",paste0(sort(c(param,to_remove)),collapse=""))
     }
-    if(param =='U'){param=c('pU','tX','tY')} # When removing/nesting confounder U, it's proportion of effective SNPs (pU)
+    if(param =='U'){param=c('pU','tX','tY')} # When removing/nesting confounder U, its proportion of effective SNPs (pU)
     #tX, and tY must also be removed from arguments
+    if("U" %in% to_remove){ 
+      # If U is already removed, then column selection must take pU,tX,tY into account and disregard the non-existant U column
+      param=c(param,'pU','tX','tY')
+      args.df1 = select (args.df, -c(param,to_remove[-match("U",to_remove)]))
+    }else{
+      args.df1 = select (args.df, -c(param,to_remove))
+    }
     
-    args.df1 = select (args.df, -c(param,to_remove))
     sp_mat1 = select (sp_mat,-c(mLL,param[param %in% colnames(sp_mat)])) #Parameter in to_remove already gone, nested starting points
     par.df = data.frame(par=I(apply(sp_mat1,1,as.list)))
     
@@ -240,7 +246,7 @@ while(length(parameters)>0 & Nesting_boolean){
   if (res_pval[ind_maxPval] > 0.05) { #If nested model with largest p-value is non-significant in comparison to parent (LRT), it must become parent model
     setwd(paste0("./", parameters[ind_maxPval])) #Enter that nested model and turn it to a parent model
     parent_dir = getwd() #Nested model is now parent model
-    to_remove = c(to_remove, parameters[ind_maxPval]) #Add parameter fromt he nested model to the to_remove list
+    to_remove = c(to_remove, parameters[ind_maxPval]) #Add parameter from the nested model to the to_remove list
     parameters = parameters[-ind_maxPval] #and remove it from the parameters list
     ## Two if sttements below are unlikely to happen, have been addressed earlier.
     if ("tX" %in% to_remove & "tY" %in% to_remove) { #If either tX or tY was previously removed, and now either tY or tX got removed, skip U
