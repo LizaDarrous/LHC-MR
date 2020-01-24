@@ -243,7 +243,8 @@ while(length(parameters)>0 & Nesting_boolean){
   ## p-values to the threshold (0.05)
   ind_maxPval=which(unlist(res_pval)==max(unlist(res_pval)))[1] #Which parameter when removed/nested has the largest p-value
   
-  if (res_pval[ind_maxPval] > 0.05) { #If nested model with largest p-value is non-significant in comparison to parent (LRT), it must become parent model
+  if (res_pval[ind_maxPval] > 0.05) { #Bonferroni Correction: 0.05/total number of pairs tested x2 for bidirectionality
+    #If nested model with largest p-value is non-significant in comparison to parent (LRT), it must become parent model
     setwd(paste0("./", parameters[ind_maxPval])) #Enter that nested model and turn it to a parent model
     parent_dir = getwd() #Nested model is now parent model
     to_remove = c(to_remove, parameters[ind_maxPval]) #Add parameter from the nested model to the to_remove list
