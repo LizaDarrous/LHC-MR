@@ -34,10 +34,10 @@ grand_dir="~/LDL-BMI/" ### Directory specific to the trait pair to be analysed.
 setwd(grand_dir)
 comp_run=TRUE   ### Change to false if complete model was already ran.
 
-tX = fread(paste0(grand_dir,"/LDL_uniq.tsv")) ### Exposure file if non-UKBB (overlapping SNPs between EXP-OUT)
-tY = fread(paste0(grand_dir,"/BMI_uniq.tsv")) ### Outcome file if non-UKBB (overlapping SNPs between EXP-OUT)
-#tX = fread(paste0("~/data/", EXP ,"_uniq.tsv")) ### Exposure preprocessed summary stats from UKBB
-#tY = fread(paste0("~/data/", OUT ,"_uniq.tsv")) ### Outcome preprocessed summary stats from UKBB
+fX = fread(paste0(grand_dir,"/LDL_uniq.tsv")) ### Exposure file if non-UKBB (overlapping SNPs between EXP-OUT)
+fY = fread(paste0(grand_dir,"/BMI_uniq.tsv")) ### Outcome file if non-UKBB (overlapping SNPs between EXP-OUT)
+#fX = fread(paste0("~/data/", EXP ,"_uniq.tsv")) ### Exposure preprocessed summary stats from UKBB
+#fY = fread(paste0("~/data/", OUT ,"_uniq.tsv")) ### Outcome preprocessed summary stats from UKBB
 
 #LD scores and regression weights found in this file were computed based on 3781 individuals from the UK10K study.
 #For the LD score calculation, squared correlations were computed between the target SNP and all sequence variants within its 2 Mb neighbourhood 
@@ -54,18 +54,18 @@ LDfile = LDfile[selF,]
 
 ### Since the summary statistics of the two traits are already filtered out for overlapping SNPs (in get_tstatXY_*.R), we can use either
 #as reference for LD data.
-snp_tokeep = intersect(LDfile$rs, tX$rsid)
+snp_tokeep = intersect(LDfile$rs, fX$rsid)
 ld_wd = LDfile[LDfile$rs %in% snp_tokeep,]
 
 ld_wd=ld_wd[order(ld_wd$rs),] 
-tX=tX[order(tX$rsid),] 
-tY=tY[order(tY$rsid),] #All 3 ought to be the same size
+fX=fX[order(fX$rsid),] 
+fY=fY[order(fY$rsid),] #All 3 ought to be the same size
 
-nX = mean(tX$n_complete_samples)  #Get sample size for trait X
-nY = mean(tY$n_complete_samples)  #Get sample size for trait Y
+nX = mean(fX$n_complete_samples)  #Get sample size for trait X
+nY = mean(fY$n_complete_samples)  #Get sample size for trait Y
 
-bX = tX$tstat/sqrt(nX)   #Get standardised beta for trait X
-bY = tY$tstat/sqrt(nY)   #Get standardised beta for trait Y
+bX = fX$tstat/sqrt(nX)   #Get standardised beta for trait X
+bY = fY$tstat/sqrt(nY)   #Get standardised beta for trait Y
 
 #Take every 10th element for faster computation
 bX = bX[seq(1, length(bX), 10)]
