@@ -31,7 +31,7 @@ fX1$A1=toupper(fX1$Allele1)
 fX1$A2=toupper(fX1$Allele2)
 fX1$rsid=fX1$oldID #In analysis file, rsid is needed to match SNPs to LD file
 
-fY1$tstat=fY1$beta/tY1$se
+fY1$tstat=fY1$beta/fY1$se
 fY1$n_complete_samples=mean(fY1$N)
 fY1$A1=toupper(fY1$A1)
 fY1$A2=toupper(fY1$A2)
