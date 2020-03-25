@@ -82,12 +82,14 @@ The LHC-MR association summary statistics analysis for multiple traits was writt
     |---- pair3 (trait2-trait3)
     |---- so on...
 ```
-Raw summary stat files downloaded in `data` require certain columns to continue with analysis: rsid, EffectAllele/A1/alt, OtherAllele/A2/ref, number of samples (effective sample size), beta/effect size of effective allele
+Raw summary stat files downloaded in `data` require certain columns to continue with analysis: rsid, EffectAllele/A1/alt, OtherAllele/A2/ref, number of samples (effective sample size), beta/effect size of effective allele,
 se/standard error of effect size.
 
 These files ought to be processed using the `get_tstatXY_[GWAS].R` scripts in order to calculate the t-statistics (beta/se) of the SNPs, which will be used in the main LHC-MR analysis.
 
-The script `get_tstatXY_UKBB.R` is slightly different than the rest. It first selects the set of SNPs for which imputation quality info>0.99 and MAF>0.005 using the `LDscore.txt` file. Then for these set of SNPs, it uses the `variants.tsv.bgz` obtained from Neale's [UKBB GWAS Imputed v3](https://docs.google.com/spreadsheets/d/1kvPoupSzsSFBNSztMzl04xMoSC3Kcx3CrjVf4yBmESU/edit?ts=5b5f17db#gid=178908679) to merge variant information to variant details of the summary statistics files. This leads to the addition of the A1 and A2 columns as well as the rsid, all of which are needed for further analysis. Some duplication occurs when `variants.tsv.bgz` is merged with UKBB summary stat files, which is handled in the scripts.
+The script `get_tstatXY_UKBB.R` is slightly different than the rest. It first selects the set of SNPs for which imputation quality info>0.99 and MAF>0.005 using the `LDscore.txt` file. 
+For LD scores you can either use the classical ones (https://data.broadinstitute.org/alkesgroup/LDSCORE/) or we have also created LD scores based on UK10K sequencing data (https://drive.google.com/file/d/1uua6zIournPvcJAs-QVWs8pTUVLtZ5Ym/view?usp=sharing), where the list of SNPs are optimised for UKB-based summary stats (e.g. by Neale).
+Then for these set of SNPs, it uses the `variants.tsv.bgz` obtained from Neale's [UKBB GWAS Imputed v3](https://docs.google.com/spreadsheets/d/1kvPoupSzsSFBNSztMzl04xMoSC3Kcx3CrjVf4yBmESU/edit?ts=5b5f17db#gid=178908679) to merge variant information to variant details of the summary statistics files. This leads to the addition of the A1 and A2 columns as well as the rsid, all of which are needed for further analysis. Some duplication occurs when `variants.tsv.bgz` is merged with UKBB summary stat files, which is handled in the scripts.
 This script is used once per UKBB trait, allowing all the traits to then have the same set of overlapping SNPs when running trait pair analysis between UKBB. 
 
 The other scripts in this folder contain the processing procedure for trait pairs that are not both UKBB. In this case, an overlapping set of SNPs ought to be found for each trait pair to be analysed, and this is where the folder structure presented above comes in handy. Each trait pair's summary stat data is read from the original data folder, then a set of overlapping SNPs is found, columns are renamed to include A1, A2 and rsid. T-stat and effective sample size is calculated for the non-UKBB trait, and the strands of the two traits are harmonised. 
