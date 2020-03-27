@@ -21,9 +21,8 @@ fY_sub=fY[fY$rsid %in% comm,]
 length(which(duplicated(fX_sub$rsid)==TRUE)) # 9 dups
 length(which(duplicated(fY_sub$rsid)==TRUE))
 
-dups=which(duplicated(fX_sub$rsid)==TRUE)
-dups2=which(!rev(duplicated(rev(fX_sub$rsid)))==FALSE) 
-fX_sub2 = fX_sub[-c(dups,dups2),]
+ALL_dups = which((duplicated(fX_sub$rsid) | duplicated(fX_sub$rsid, fromLast=TRUE))==TRUE) # get ALL indices that are dups
+fX_sub2 = fX_sub[-ALL_dups,]
 
 ## Second set of overlapping SNPs between the two traits after duplicate deletion
 comm2=intersect(fY_sub$rsid,fX_sub2$rsid)
