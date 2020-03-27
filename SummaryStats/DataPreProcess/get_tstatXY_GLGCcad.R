@@ -22,6 +22,7 @@ length(which(duplicated(fX_sub$rsid)==TRUE)) # 9 dups
 length(which(duplicated(fY_sub$rsid)==TRUE))
 
 dups=which(duplicated(fX_sub$rsid)==TRUE)
+dups2=which(!rev(duplicated(rev(fX_sub$rsid)))==FALSE) 
 fX_sub2 = fX_sub[-c(dups,dups2),]
 
 ## Second set of overlapping SNPs between the two traits after duplicate deletion
