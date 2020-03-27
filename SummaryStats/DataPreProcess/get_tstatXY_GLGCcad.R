@@ -37,13 +37,12 @@ fY1=fY_sub2[order(fY_sub2$rsid),]
 ## Add info to files to match those of UKBB (check columns)
 #Get tsat (standerdised effects) and average sample size to be used as N in LHC-MR
 fX1$beta=fX1$Effect
-fX1$SE=fX1$StdErr
-fX1$tstat=fX1$beta/fX1$SE
+fX1$se=fX1$StdErr
+fX1$tstat=fX1$beta/fX1$se
 fX1$n_complete_samples=380831 #Effective sample size calculated from (4*N_controls*N_cases)/N_control+N_cases
 fX1$A1=toupper(fX1$Allele1)
 fX1$A2=toupper(fX1$Allele2)
 
-fY1$SE=fY1$se
 fY1$tstat=fY1$beta/fY1$SE
 fY1$n_complete_samples=fY1$N
 fY1$A1=toupper(fY1$A1)
