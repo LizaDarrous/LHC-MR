@@ -43,7 +43,7 @@ fX1$n_complete_samples=380831 #Effective sample size calculated from (4*N_contro
 fX1$A1=toupper(fX1$Allele1)
 fX1$A2=toupper(fX1$Allele2)
 
-fY1$tstat=fY1$beta/fY1$SE
+fY1$tstat=fY1$beta/fY1$se
 fY1$n_complete_samples=fY1$N
 fY1$A1=toupper(fY1$A1)
 fY1$A2=toupper(fY1$A2)
