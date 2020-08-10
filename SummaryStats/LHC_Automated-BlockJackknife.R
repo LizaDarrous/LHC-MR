@@ -133,8 +133,8 @@ args.df = rbind(lower = c(0,0,1e-6,1e-6,1e-6,1e-6,1e-6,1e-6,-1,-1,-1,(-1/max(nX,
 colnames(args.df) = c("iX", "iY", "pX","pU","pY","h2X","h2Y","tX","tY","a","b","rho") #naming them for later reference
 args.df=as.data.frame(args.df)
 par.df2 = merge(par.df,JK_index)  #202 rows, for each bin same sp 
-#Source the complete optimisation script
-source("/data/sgg2/liza/SEM_Real/auto/Scripts/optim_comp.R")
+#Source the complete optimisation script - Block jackknife version
+source("/data/Scripts/optimJK_comp.R")
 
 start.time <- Sys.time()
 sjob = slurm_apply(f = run_optim, params = par.df2, jobname = "JKcomp", nodes = 400, cpus_per_node = 1,
