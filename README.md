@@ -4,9 +4,6 @@ Latent Heritable Confounder MR (LHC-MR) is a method applicable to association su
 
 LHC-MR extends the standard Mendelian Randomisation model to incorporate the presence of a latent (unmeasured) heritable confounder and estimates its contribution to the exposure and outcome traits, while simultaneously estimating the bi-directional causal effect between the two traits.
 
-## Overview
-
-! To be filled out !
 
 ## Usage
 
