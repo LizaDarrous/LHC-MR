@@ -67,7 +67,7 @@ install.packages(mixtools);  library(mixtools)
 ```
 A very important package used in the analysis is [rslurm](https://cran.r-project.org/web/packages/rslurm/rslurm.pdf), which allows us to submit array jobs from within R without having to create a bash script to do so. Moreover, this parallelisation step takes advantage of the presence of a cluster with several partitions, onto which it can simultaneously distribute and run array jobs. Once rslurm is installed, it's important to edit the template files that come with the package to reflect the info of the cluster being used.
 
-The LHC-MR association summary statistics analysis for multiple traits was written with a certain folder hierarchy assummed, such as the following:
+The LHC-MR association summary statistics analysis for multiple traits was written with a certain folder hierarchy assummed, such as the following (note that this is just a suggestion):
 ```
 ~ --|---- data
     |       |---- Scripts (optim.R and variations)
