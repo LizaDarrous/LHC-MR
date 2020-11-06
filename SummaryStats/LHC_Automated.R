@@ -56,10 +56,14 @@ LDfile = LDfile[selF,]
 #as reference for LD data.
 snp_tokeep = intersect(LDfile$rs, fX$rsid)
 ld_wd = LDfile[LDfile$rs %in% snp_tokeep,]
+fX = fX[fX$rsid %in% snp_tokeep,]	
+fY = fY[fY$rsid %in% snp_tokeep,]
 
 ld_wd=ld_wd[order(ld_wd$rs),] 
 fX=fX[order(fX$rsid),] 
 fY=fY[order(fY$rsid),] #All 3 ought to be the same size
+all(fX$rsid==ld_wd$rs)	
+all(fX$rsid==fY$rsid)
 
 nX = mean(fX$n_complete_samples)  #Get sample size for trait X
 nY = mean(fY$n_complete_samples)  #Get sample size for trait Y
