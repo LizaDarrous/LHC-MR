@@ -212,24 +212,32 @@ while(length(parameters)>0 & Nesting_boolean){
   
   print("Jobs are completed.")
   
+  ## Result format purposes
+  param_full = rep(0,13) ##NA or 0
+  names(param_full) = c("mLL","iX", "iY", "pX","pU","pY","h2X","h2Y","tX","tY","a","b","rho")
+  
   ### Get the current/parent min mLL, run LRT against the parent mLL and compare
   parent_min = sp_mat[which(sp_mat$mLL==min(sp_mat$mLL)),]
-  parent_min1=cbind(model = "Parent", parent_min)
+  parent_min1 = param_full  ## bigger (always 12 params) is second element in match
+  parent_min1[match(names(parent_min),names(parent_min1))] = parent_min
+  parent_min2=cbind(model = "Parent", t(parent_min1))
   f1="Pair_LRT.csv"
-  write.table(parent_min1, file=f1, sep = ",", append = TRUE, row.names = FALSE)
-  write.table("Comparison against Parent Model", file=f1, sep = ",", append = TRUE, row.names = FALSE)
+  write.table(parent_min2, file=f1, sep = ",", append = TRUE, row.names = FALSE)
+  #write.table("Comparison against Parent Model", file=f1, sep = ",", append = TRUE, row.names = FALSE)
   res_pval=list()
   for (x in 1:length(parameters)) {
     setwd(paste0("./", parameters[x]))
     res_temp = get_slurm_out(res_list[[x]], outtype = 'table')
     write.csv(res_temp, "AllRes_parscale.csv", row.names = FALSE) #Will be used to read new sp_mat if nesting continues
     res_min = res_temp[which(res_temp$mLL == min(res_temp$mLL)), ]
+    res_min1 = param_full
+    res_min1[match(names(res_min),names(res_min1))] = res_min
     df1 = length(parent_min) - length(res_min) #get degrees of freedom
     LRT = lr.test(x = res_min$mLL, y = parent_min$mLL, df = df1)
     res_pval[[x]] = LRT$p.value
-    LRT1 = cbind(model = paste0("No ", parameters[x]), res_min, pval = LRT$p.value)
+    LRT1 = cbind(model = paste0("No ", parameters[x]), t(res_min1), pval = LRT$p.value)
     setwd(parent_dir) #Write LRT comparison results in parent directory
-    write.table(LRT1, file = f1, sep = ",", append = TRUE, row.names = FALSE)
+    write.table(LRT1, file = f1, sep = ",", append = TRUE, row.names = FALSE, col.names = FALSE)
   }
   
   print("LRT performed.")
