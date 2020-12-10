@@ -134,7 +134,7 @@ Finally, when a final model is reached, the loop of nesting ends, and the script
 
 ## Citation
 
-Manuscript in preparation 
+Preprint: https://www.medrxiv.org/content/10.1101/2020.01.27.20018929v2.article-metrics 
 
 ## Authors
 
