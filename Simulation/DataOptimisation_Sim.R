@@ -3,7 +3,6 @@ library(NMOF)
 library(mvtnorm)
 library(stats)
 library(data.table)
-.libPaths(c(.libPaths(), "/data/sgg2/ninon/bin/R-3.4.3_Packages/"))
 library(TwoSampleMR)
 
 args <- commandArgs(trailingOnly = TRUE)
