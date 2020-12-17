@@ -8,7 +8,7 @@ library(mvtnorm)
 library(stats)
 
 ## Set wd as the folder of the setting to be tested
-setwd("/data/sgg3/liza/SEM_Sim/Unified_Sim/Standard")
+setwd("")
 ## Set number of data to be generated
 nD = 100
 ## Make a directory to store the generated data in 
@@ -39,7 +39,7 @@ params = data.frame(pX = pX, pU = pU, pY = pY,
 ## Save them to file
 write.csv(params, "params_settings.csv", row.names=F)
 ## Source data generation file
-source("/data/sgg3/liza/SEM_Sim/Unified_Sim/Scripts/DataSIM.R") # data genetration functions (takes following parameters)
+source("DataSIM.R") # data genetration functions (takes following parameters)
 print(paste0("Simulating data ",nD," times..."))
 
 ## Set seed for each data generation and save data in folder
