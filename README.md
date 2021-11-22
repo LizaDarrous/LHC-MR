@@ -1,6 +1,6 @@
 # LHC-MR
 
-:warning: **LHC-MR is undergoing MAJOR changes and developments. A new implementation will be released soon, but until then, this version is no longer maintained. Thank you for understanding!** :warning:
+:warning: **LHC-MR is undergoing MAJOR changes and developments. A new implementation can be found [HERE](https://github.com/LizaDarrous/lhcMR). This version is no longer maintained. Thank you for understanding!** :warning:
 
 Latent Heritable Confounder MR (LHC-MR) is a method applicable to association summary statistics, which estimates bi-directional causal effects, direct heritability, confounder effects and sample overlap. 
 
